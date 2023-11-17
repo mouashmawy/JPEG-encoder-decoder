@@ -1,5 +1,6 @@
 import numpy as np
-
+from DCT_encoder import *
+from Huffman_encoder import *
 
 
 
