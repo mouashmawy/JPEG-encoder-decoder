@@ -73,39 +73,21 @@ def dequantization(block):
 
 
 
-# this function  calculate all 8x8 DCT basis matrices using np vectorized operations.
-# Output: Dictionary with keys  from '0,0' to '7,7', each mapping to its corresponding 8x8 DCT basis matrix. 
-# for example dct_bases['0,0'] will return the first base
-def DCT_bases_optimized():
-    # Create meshgrids for u, v, x, and y
-    u, v, x, y = np.meshgrid(range(8), range(8), range(8), range(8), indexing='ij')
+# function to comute the inverse DCT 
+def optimized_IDCT_matrix(dct_matrix):
+    u = np.arange(8)
+    x = u.reshape((8, 1))
+    v = u.reshape((1, 8))
+    y = v.reshape((8, 1))
 
-    # Compute the DCT bases
-    dct_bases = np.cos(((2 * x + 1) * u * np.pi) / 16) * np.cos(((2 * y + 1) * v * np.pi) / 16)
+    # Precompute cosine values
+    cos_term_u_x = np.cos((2 * x + 1) * u * np.pi / (2 * 8))
+    cos_term_v_y = np.cos((2 * y + 1) * v * np.pi / (2 * 8))
 
-    # Reshape to separate each 8x8 DCT base
-    dct_bases = dct_bases.reshape(8, 8, 8, 8)
+    # Compute IDCT using matrix operations
+    idct_matrix = cos_term_u_x @ dct_matrix @ cos_term_v_y.T
 
-    return dct_bases
-
-def inverse_dct(dct_coefficients):
-
-    dct_bases = DCT_bases_optimized()
-    
-    # Initialize the matrix for the result of the IDCT
-    idct_matrix = np.zeros((8, 8))
-    
-    # Loop through each pixel in the spatial domain
-    for x in range(8):
-        for y in range(8):
-            sum = 0
-            # Accumulate the sum of the product of DCT coefficients and basis functions
-            for u in range(8):
-                for v in range(8):
-                    sum += dct_coefficients[u, v] * dct_bases[u, v, x, y]
-            idct_matrix[x, y] = sum
-
-    return np.round(idct_matrix)
+    return idct_matrix
 
 
 

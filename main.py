@@ -16,7 +16,6 @@ def main():
         reverse_blocks={}
         # loop through each block
         for block in image_blocks:
-            print(image_blocks[block])
             # first transfare the information in the block to the frequesnce domain using DCT 
             freq_spectruem=DCT_matrix(image_blocks[block])
             # third reduce the matrix d 
@@ -35,7 +34,7 @@ def main():
 
             two_d_matrix=expened_matrix_dimantion(decoded_array)
 
-            time_domain=inverse_dct(two_d_matrix)
+            time_domain=optimized_IDCT_matrix(two_d_matrix)
 
             reverse_blocks[block]=time_domain
 
