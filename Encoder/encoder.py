@@ -13,7 +13,7 @@ import numpy as np
 
 def generating_image_blocks(image):
     # Initialize an empty list to store the 8x8 blocks
-    blocks = {}
+    blocks = []
 
     # Determine the number of rows and columns in the original image
     number_of_rows, number_of_columns = image.shape
@@ -43,9 +43,9 @@ def generating_image_blocks(image):
     for row,row_index in zip(range(0, rows, 8),range(rows//8)):
         for column, column_index in zip(range(0, columns, 8), range(columns//8)):
             # Slice out an 8x8 block
-            blocks[f'{row_index},{column_index}'] = padded_array[row:row+8, column:column+8]
+            blocks.append(padded_array[row:row+8, column:column+8])
 
-    return blocks
+    return rows, columns ,blocks
 
 
 

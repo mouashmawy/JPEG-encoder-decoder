@@ -92,18 +92,21 @@ def optimized_IDCT_matrix(dct_matrix):
 
 
 #describe your function
-def collect_image(time_domain_blocks):
-    # Determine the size of the full array
-    columns = (max(int(key.split(',')[1]) for key in time_domain_blocks.keys()) + 1)*8
-    rows=(max(int(key.split(',')[0]) for key in time_domain_blocks.keys()) + 1)*8
+
+def collect_image(time_domain_blocks, rows, columns):
     # Create the full array
-    full_array = np.zeros((rows,columns))
+    number_of_columns=columns//8
+    number_of_rows=rows//8
 
+    full_array = np.zeros((rows, columns))
 
-    # Fill in the full array
-    for key, block in time_domain_blocks.items():
-        row, col = map(int, key.split(','))
-        full_array[row*8:(row+1)*8, col*8:(col+1)*8] = block
+    # Generate a dictionary with the keys as tuple coordinates
+    block_coordinates = {(row, col): None for row in range(number_of_rows) for col in range(number_of_columns)}
+
+    for key, block in zip(block_coordinates.keys(),time_domain_blocks):
+        row, col = key
+        full_array[row*8:(row+1)*8, col*8:(col+1)*8]=block
+
     return full_array
 
 
