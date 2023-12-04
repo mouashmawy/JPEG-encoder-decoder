@@ -27,12 +27,16 @@ def main():
 
             reduced_array=length_code_algorthem(one_d_array)
 
-            # huffman 
+            # huffman
+            encoded_array, root_tree =encode_huffman(reduced_array) 
 
-            #decoding 
-            decoded_array=length_coding_decoding(reduced_array)
 
-            two_d_matrix=expened_matrix_dimantion(decoded_array)
+            # decoding
+            decoded_array = decode_huffman(encoded_array, root_tree)
+
+            decoded_length_coding = length_coding_decoding(decoded_array)
+
+            two_d_matrix=expened_matrix_dimantion(decoded_length_coding)
 
             time_domain=optimized_IDCT_matrix(two_d_matrix)
 

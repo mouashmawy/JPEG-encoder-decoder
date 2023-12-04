@@ -140,9 +140,28 @@ def length_code_algorthem(one_day_array):
 
 #describe your function
 def Huffman_enconding(array):
+    
+    #testing
+    array= [1,1,1,2,5,9,5,3,2,5,7,4,1,2,5,9,6,3,9,8,5,2,1,4,7,5,8,9,6,2,8,7,5,6,9,7,4,5,5,5,5,5,5,5,6,6,9,9,7,4,5,5,5,5,5,5,5,6,6,9,9,7,4,5,5,5,5,5,5,5,6,6,9,9,7,4,5,5,5,5,5,5,5,6,6,9,9,7,4,5,5,5,5,5,5,5,6,6,9,9,7,4,5,5,5,5,5,5,5,6,6,9,9,7,4,5,5,5,5,5,5,5,6,6,9,9,7,4,5,5,5,5,5,5,5,6,6,9,9,7,4,5,5,5,5,5,5,5,6,6,9,9,7,4,5,5,5,5,5,5,5,6,6,9,9,7,4,5,5,5,5,5,5,5,6,6,9,8,5,2,1,4,7,8,8,6,2,5,8,7]
+
+    table = get_Huffman_table(array)
+    print(table) 
+    root = heap_tree(get_frequency(array))
 
 
-    return #stream of 0s & 1s
+    encoded = encode_huffman(array, table)
+    print(encoded)
+    print('------------------------------')
+    decoded = decode_huffman(encoded, root)
+    print(decoded)
+
+    print("Is the array simillar? ",array == decoded)
+    compression_ratio = round(len(encoded)/(len(array)*8)*100)
+    print(f"Compression ratio: {compression_ratio}%")
+
+    return encoded, root      #stream of 0s & 1s
+
+
 
 
 
