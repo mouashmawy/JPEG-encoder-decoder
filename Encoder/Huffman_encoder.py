@@ -89,10 +89,35 @@ def encode_huffman(array, huff_table):
     return code
 
 
-#testing
-array= [1,1,1,2,5,9,5,3,2,5,7,4,1,2,5,9,6,3,9,8,5,2,1,4,7,5,8,9,6,2,8,7,5,6,9,7,4,5,5,5,5,5,5,5,6,6,9,9,7,4,5,5,5,5,5,5,5,6,6,9,9,7,4,5,5,5,5,5,5,5,6,6,9,9,7,4,5,5,5,5,5,5,5,6,6,9,9,7,4,5,5,5,5,5,5,5,6,6,9,9,7,4,5,5,5,5,5,5,5,6,6,9,9,7,4,5,5,5,5,5,5,5,6,6,9,9,7,4,5,5,5,5,5,5,5,6,6,9,9,7,4,5,5,5,5,5,5,5,6,6,9,9,7,4,5,5,5,5,5,5,5,6,6,9,9,7,4,5,5,5,5,5,5,5,6,6,9,8,5,2,1,4,7,8,8,6,2,5,8,7]
+def decode_huffman(encoded_str, root):
+    decoded_array = []
+    current_node = root
+    for bit in encoded_str:
+        if bit == '0':
+            current_node = current_node.left
+        else:
+            current_node = current_node.right
 
-table = get_Huffman_table(array)
-print(table)
+        if current_node.left is None and current_node.right is None:
+            decoded_array.append(current_node.symbol)
+            current_node = root
 
-print(encode_huffman(array, table))
+    return decoded_array
+
+# #testing
+# array= [1,1,1,2,5,9,5,3,2,5,7,4,1,2,5,9,6,3,9,8,5,2,1,4,7,5,8,9,6,2,8,7,5,6,9,7,4,5,5,5,5,5,5,5,6,6,9,9,7,4,5,5,5,5,5,5,5,6,6,9,9,7,4,5,5,5,5,5,5,5,6,6,9,9,7,4,5,5,5,5,5,5,5,6,6,9,9,7,4,5,5,5,5,5,5,5,6,6,9,9,7,4,5,5,5,5,5,5,5,6,6,9,9,7,4,5,5,5,5,5,5,5,6,6,9,9,7,4,5,5,5,5,5,5,5,6,6,9,9,7,4,5,5,5,5,5,5,5,6,6,9,9,7,4,5,5,5,5,5,5,5,6,6,9,9,7,4,5,5,5,5,5,5,5,6,6,9,8,5,2,1,4,7,8,8,6,2,5,8,7]
+
+# table = get_Huffman_table(array)
+# print(table)
+# root = heap_tree(get_frequency(array))
+
+
+# encoded = encode_huffman(array, table)
+# print(encoded)
+# print('------------------------------')
+# decoded = decode_huffman(encoded, root)
+# print(decoded)
+
+# print("Is the array simillar? ",array == decoded)
+# compression_ratio = len(encoded)/(len(array)*8)*100
+# print("Compression ratio: ",compression_ratio,"%")
