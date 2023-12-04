@@ -5,7 +5,7 @@ import cv2
 
 
 def main():
-    image_path=r"C:\Users\fatma taha\Desktop\ZC\Info\Lab6\B2DBy.jpg"
+    image_path=r"B2DBy.jpg"
     # Load the grayscale image
     gray_image_in_pixels = cv2.imread(image_path, cv2.IMREAD_GRAYSCALE) #2D array
    
@@ -28,16 +28,12 @@ def main():
             reduced_array=length_code_algorthem(one_d_array)
 
             # huffman
-            encoded_array, root_tree =encode_huffman(reduced_array) 
-
+            encoded_array, root_tree =Huffman_enconding(reduced_array) 
 
             # decoding
             decoded_array = decode_huffman(encoded_array, root_tree)
-
             decoded_length_coding = length_coding_decoding(decoded_array)
-
             two_d_matrix=expened_matrix_dimantion(decoded_length_coding)
-
             time_domain=optimized_IDCT_matrix(two_d_matrix)
 
             reverse_blocks[block]=time_domain
