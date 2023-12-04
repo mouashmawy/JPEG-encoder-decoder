@@ -1,62 +1,74 @@
 from fractions import Fraction
-def finite_precision_encoder(precision, symbols, input_symbols, probabilities):
-    # Initialize the encoder's state
-    whole = 2 ** precision
-    half = whole // 2
-    quarter = whole // 4
+def finite_precision_encoder(precision,symbols,input,probabilities):
+  #precision : number of bits that represent the symbol
+  #r : the numerator of the probabilities assuming that they all could be represented as a fraction with the same denumerator
+  #R : the sum of all r's
+  #c : the lower limit of symbols range
+  #d : the upper limits of symbols range
 
-    # Compute r, R, c, and d as in the decoder
-    r = [p.numerator for p in probabilities]
-    R = sum(r)
-    c = [0]
-    for i in range(1, len(probabilities)):
-        c.append(sum(r[0:i]))
-    d = [c[i] + r[i] for i in range(len(probabilities))]
+  #setup
+  whole=2**precision
+  half=whole/2
+  quarter=whole/4
+  encoded_symbols=[]
+  #================================
+  r = [p.numerator for p in probabilities]
+  R = sum(r)
+  c = [0]
+  for i in range(1, len(probabilities)):
+    c.append(sum(r[0:i]))
+  d = [c[i] + r[i] for i in range(len(probabilities))]
 
-    a = 0
-    b = whole
-    encoded_bits = []
+  #encoding procedure:
+  a=0
+  b=whole
+  s=0
 
-    # Encoding process
-    for symbol in input_symbols:
-        # Find the index of the symbol
-        symbol_index = symbols.index(symbol)
+  for i in range(len(symbols)):
+    index_=symbols.index(input[i])
+    #calculating the range
+    w=b-a
+    b=a+round(w*d[index_]/R)
+    a=a+round(w*c[index_]/R)
 
-        # Calculate the new range
-        w = b - a
-        b = a + (w * d[symbol_index]) // R
-        a = a + (w * c[symbol_index]) // R
+    while(b<half or a> half):
+      if(b<half):
+        encoded_symbols.append(0)
+        for i in range(s):
+          encoded_symbols.append(1)
 
-        # Rescale the range and output bits as necessary
-        while True:
-            if b < half:
-                encoded_bits.append(0)
-                a *= 2
-                b *= 2
-            elif a >= half:
-                encoded_bits.append(1)
-                a = 2 * (a - half)
-                b = 2 * (b - half)
-            else:
-                break
+        a=2*a
+        b=2*b
+        s=0
 
-            if a >= quarter and b < 3 * quarter:
-                a = 2 * (a - quarter)
-                b = 2 * (b - quarter)
+      elif(a>half):
+        encoded_symbols.append(1)
+        for i in range(s):
+          encoded_symbols.append(0)
 
-    # Output the remaining bits
-    # Check if 'a' is in the lower half or the upper quarter
-    if a < quarter:
-        encoded_bits.append(0)
-        for i in range(precision - len(encoded_bits)):
-            encoded_bits.append(1)  # Padding with 1s
-    else:
-        encoded_bits.append(1)
-        for i in range(precision - len(encoded_bits)):
-            encoded_bits.append(0)  # Padding with 0s
+        a=2*round(a-half)
+        b=2*round(b-half)
+        s=0
 
-    return encoded_bits
 
+    while(a>quarter and b<3*quarter ):
+      s=s+1
+      a=2*round(a-quarter)
+      b=2*round(b-quarter)
+
+  s=s+1
+  if(a<=quarter):
+    encoded_symbols.append(0)
+    for i in range(s):
+          encoded_symbols.append(1)
+
+  else:
+      encoded_symbols.append(1)
+      for i in range(s):
+        encoded_symbols.append(0)
+
+
+  return encoded_symbols
 
 
 
