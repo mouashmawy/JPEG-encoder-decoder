@@ -269,3 +269,61 @@ def Huffman_enconding(array):
 
 
 
+# Quantization table type
+def quantizationTable(x=1):
+    '''
+    This function used to get quantization table
+    Input: an integer number from 0 to 3
+    Output: a 2D list of size 8x8
+    '''
+
+    if x == 0:  # no compression
+        table = np.ones((8, 8))
+    elif x== 1: # for low comperission
+        file_path = 'quantization-tables/q_table_low.csv'
+    elif x== 2: # for high comperission
+        file_path= 'quantization-tables/q_table_high.csv'
+    elif x == 3: #for luminance
+        file_path= 'q_table_high/q_table_luminance.csv'
+
+    # Initialize the quantization table
+    table = []
+
+    # Open the CSV file and read its contents into the 2D array (table)
+    with open(file_path, newline='') as csvfile:
+        csvreader = csv.reader(csvfile)
+        for row in csvreader:
+            table.append(row)
+
+    return table
+
+
+def quantization(dct_blocks,x):
+    '''
+      this function performs the quantization step,
+     it devides each block by the quantization table based on the desired comperssion type then normalize it
+    '''
+
+    # dct_blocks: the output of the dct step
+    # x: an integer number from 0 to 2 denotes the comperssion type
+
+    Qtable = quantizationTable(x)
+    quantizationOutput = []
+    for block in dct_blocks:
+        qBlock = np.divide(block, Qtable)  #devide each block over the quantization table
+        for i in range(len(qBlock)):
+            qBlock[i] = [round(item) for item in qBlock[i]]  # round each item in the quantized block (normalization step)
+        quantizationOutput.append(qBlock)   # 2-D of the quantized blocks
+
+    return quantizationOutput
+
+def dequantization(arr2D,x):
+    # Multiply by Quantization Table
+    qTable = quantizationTable(x)
+    qDecOut = []
+    for block_8 in arr2D:
+        newBlock = np.multiply(block_8, qTable)
+        for i in range(len(newBlock)):
+            newBlock[i] = [round(item) for item in newBlock[i]]
+        qDecOut.append(newBlock)
+    return qDecOut
